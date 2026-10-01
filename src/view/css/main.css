@@ -1,0 +1,263 @@
+/* body{
+    background: url("../img/bg/2.png");
+} */
+::-webkit-scrollbar {
+    background: #ccc;
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #8fc;
+}
+
+#book-box {
+    text-align: center;
+}
+
+.card {
+    height: 450px;
+
+    float: left;
+    display: block;
+
+    background-color: #fcfcfc80;
+    backdrop-filter: blur(8px);
+
+    border: 0.5px solid #ccc;
+    border-radius: 10px;
+
+    padding-inline: 1.5em;
+    margin-inline: .5em;
+    margin-block: 1em;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 25%;
+    max-width: 200px;
+}.ndc{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #8fb;
+    padding-inline: 5px;
+    border-radius: 4px;
+}
+
+h2 {
+    margin-block: 0.2em 0em;
+}
+h3{
+    margin-block: 0.2em 0em;
+}
+
+p {
+    margin-block: .5em;
+}
+
+.toolbar{
+    padding: .5em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    backdrop-filter: blur(20px);
+    width: 100%;
+    background: #fff9;
+    /* height: 5.5em; */
+}.margin-div{
+    height: calc(.5em*2/*バーのpadding*/ + 6em/*contentの高さ*/ + 1em /*追加余白*/);
+}#journal_bar{
+    padding-inline: 1.5em;
+    vertical-align: middle;
+    overflow-x: scroll;
+}.journal_tag {
+    border-radius: 5px;
+    background-color: #eff;
+    padding-inline: .5em;
+    padding-block: .25em;
+    margin-inline: .5em;
+    cursor: pointer;
+    &:hover{
+        background-color: #8fc;
+    }
+    &.select_tag{
+        background-color: #8f8;
+    }
+}#tag_list{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+.icon_button{
+    width: 3em;
+    height: 3em;
+    border-radius: 10px;
+    border: none;
+    background-color: white;
+    margin-bottom: .5em;
+    &:hover{
+        background-color: #ccc;
+    }
+}.icon_button.book_add::before {
+    background: url("../img/icon/book.svg") no-repeat;
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    vertical-align: middle;
+}.icon_button.camera_book_add::before {
+    background: url("../img/icon/camera.svg") no-repeat;
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    vertical-align: middle;
+}.icon_button.export_csv::before {
+    background: url("../img/icon/download.svg") no-repeat;
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    vertical-align: middle;
+}.icon_button.edit_button::before {
+    background: url("../img/icon/pen.svg") no-repeat;
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    vertical-align: middle;
+}.icon_button.remove_button{
+    border: 4px solid #ff3e00;
+}.icon_button.remove_button::before {
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    transform: translate(-2.5px, -0.7px);
+    background-size: contain;
+    vertical-align: middle;
+    background: url("../img/icon/trash.svg") no-repeat;
+}.icon_button.setting_button::before{
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    transform: translate(0.5px, -0.7px);
+    background-size: contain;
+    vertical-align: middle;
+    background: url("../img/icon/setting.svg") no-repeat;
+}
+
+img{
+    margin-top:1em;
+}
+.card img{
+    width: 95%;
+}
+
+/*************************************************/
+/********************** desc card ****************/
+/*************************************************/
+
+#desc_card img{
+    width: 40%;
+}
+
+#back_black{
+    z-index: 9998;
+    background-color: #0007;
+    height: 100%;
+    width: 100%;
+    display: none;
+    /* 水平・垂直方向の中央揃え */
+    position: fixed;
+    top: 0%;
+    left: 0%;
+}
+#desc_card{
+    background-color: #fcfcfc;
+    padding:1.5em;
+    border-radius:20px;
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 70%;
+    height: 80%;
+    display: none;
+    z-index: 9999;
+    /* 水平・垂直方向の中央揃え */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    & p{
+        margin-top: 1em;
+    }
+}#desc_card::-webkit-scrollbar {display: none;}
+#desc_card::-webkit-scrollbar-thumb {display: none;}
+#tool_div{
+    position: absolute;
+    z-index: 99999;
+}
+table{border-collapse: collapse;}
+table td{ border: 1px solid #888; padding: 5px 10px; }
+
+
+/*************************************************/
+/********************** tool *********************/
+/*************************************************/
+.other_input{
+    width: 60%;
+    margin: 15px 1.5em;
+    padding: 8px;
+    border: 2px solid #89f;
+    border-radius: 10px;
+    background-color: white;
+}
+.other_button{
+    border: none;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #8885;
+    &:hover {
+            background-color: #888c;
+        }
+}
+.camera_video{
+    height: fit-content;
+    width: 90%;
+    border: 2px solid #aaa;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: .4em;
+    display: block;
+    margin-inline: auto;
+}
+.p_markup{
+    width: fit-content;
+    margin-inline: auto;
+    display: block;
+    border-bottom: 3px solid #33f;
+    padding-inline: 3em;
+}
+#journal_bar .other_input{
+    width: fit-content;
+    margin: 0;
+    margin-inline: .3em;
+}
+.none_img{
+    min-width: 90%;
+    padding-block: 1.5em;
+    height: fit-content;
+    display: block;
+    text-align: left;
+}
+.none_img img{
+    display: none;
+}

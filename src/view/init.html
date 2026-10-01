@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定しましょう！</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/tool.css">
+    <style>
+        body{
+            background: url("img/bg/default.png");
+        }
+        .other_button{
+            width: 90%;
+            display:inline-block;
+            border-radius: 10px;
+            margin: 5px auto;
+            padding: 10px 15px;
+            background-color: #fff;
+            border: 2px solid #89f;
+
+            &:hover {
+                    background-color: #5ef;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1>初期設定をしましょう</h1>
+        <ul>
+            <li>データフォルダ：データベースが入るフォルダ。</li>
+            <li>画像フォルダー：取得した本のカバー画像などが入るフォルダ。</li>
+        </ul>
+        <button class="other_button" id="data_b">1. データフォルダーを選択</button>
+        <button class="other_button" id="img_b">2. 画像フォルダーを選択</button>
+        <button class="other_button" id="send">3. 適用</button>
+    </div>
+    <div id="tool_div"></div>
+    <script src="./js/tool.js"></script>
+    <script>
+        let data_b = document.getElementById("data_b");
+        let img_b = document.getElementById("img_b");
+        let send = document.getElementById("send");
+        let data = false;
+        let img = false;
+        let noti = false;
+        let default_path = NaN;
+        data_b.addEventListener("click",async()=>{
+            console.log("Data path select");
+            await window.api.send("init_setting",{"name":"data_path"});
+            await window.api.on("file_selected",(arg)=>{
+                console.log(arg["dataText"]);
+                data_b.innerText = "データフォルダ："+arg["dataText"]
+                data_b.style = "background-color:lawngreen;"
+                data = true;
+                default_path = arg["dataText"]
+            })
+        })
+        img_b.addEventListener("click", async () => {
+            console.log("book cover path select")
+            await window.api.send("init_setting", { "name": "book_img","default_path":default_path });
+            await window.api.on("file_selected", (arg) => {
+                console.log(arg["dataText"]);
+                img_b.innerText = "画像フォルダ：" + arg["dataText"]
+                img_b.style = "background-color:lawngreen;"
+                img = true;
+            })
+        })
+        send.addEventListener("click", async () => {
+            console.log("apply");
+            await window.api.send("db_path_move");
+            if (img && data) {
+                console.log("OK");
+                // window_prompt("このアプリを手動で再起動してください！");/*通知*/
+                window_prompt("このアプリを再起動します!");
+                window.api.send("restart")
+                noti = true;
+            }
+
+            // await window.api.on("file_selected", (arg) => {
+            //     console.log(arg["dataText"]);
+            //     data_b.innerText = "データフォルダ：" + arg["dataText"]
+            //     data_b.style = "background-color:lawngreen;"
+            //     data = true;
+            //     default_path = arg["dataText"]
+            // })
+        })
+    </script>
+</body>
+</html>

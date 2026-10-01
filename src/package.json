@@ -1,0 +1,54 @@
+{
+  "dependencies": {
+    "@electron/build-tools": "^2.1.5",
+    "fs-extra": "^11.4.1",
+    "js-yaml": "^5.4.1"
+  },
+  "name": "book-history",
+  "version": "0.1.2",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win",
+    "dist-mac": "electron-builder --mac"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "build": {
+    "appId": "book-history",
+    "icon": "./view/img/icon.ico",
+    "directories": {
+      "output": "../../build"
+    },
+    "files": [
+      "view",
+      "preload.js",
+      "main.js",
+      "package.json",
+      "package-lock.json"
+    ],
+    "mac": {
+      "icon": "./view/img/icon.png",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "icon": "",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "icon": "./view/img/icon.png",
+      "target": "AppImage"
+    }
+  },
+  "devDependencies": {
+    "electron-builder": "^26.15.3"
+  }
+}
