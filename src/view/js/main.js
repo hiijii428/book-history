@@ -18,6 +18,7 @@
  *
  */
 
+
 /****************************/
 /*********** debug **********/
 
@@ -238,7 +239,7 @@ async function make_card() { /* 手動入力から情報作成 */
         json[key] = $(elem).val()
     })
     console.log(json);
-    await window.api.send("yaml_add", json); // Send
+    await window.api.send("yaml_add", JSON.stringify(json)); // Send
     info_toast("本を追加しました。")
     load();
 }
@@ -586,7 +587,8 @@ window.api.once("setting_request", () => {
  * https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&query=isbn=ISBN
  * https://ndlsearch.ndl.go.jp/api/opensearch?isbn=ISBN
  */
-async function isbn_add_yaml(isbn,tags=null) {/* 引数のISBNをyamlに登録 */
+async function isbn_add_yaml(isbn, tags = null) {/* 引数のISBNをyamlに登録 */
+    info_toast("本を登録します")
     isbn = isbn.replaceAll("-", "");
     console.log("ISBN search start!");
     for (let book of db) {
@@ -600,6 +602,10 @@ async function isbn_add_yaml(isbn,tags=null) {/* 引数のISBNをyamlに登録 *
     /* OpenBD(book data)を叩く */
     console.log('https://api.openbd.jp/v1/get?isbn=' + isbn + '&pretty')
     let data = await fetch('https://api.openbd.jp/v1/get?isbn=' + isbn + '&pretty');
+    if (data.status !== 200) {
+        error_toast("リクエストエラー" + data.statusText)
+        console.log(text)
+    }
     data = await data.json()
     console.log(data)
     json["isbn"] = isbn;              //isbn
@@ -627,10 +633,15 @@ async function isbn_add_yaml(isbn,tags=null) {/* 引数のISBNをyamlに登録 *
     if(data[0] == null || setting_json["ndl_search"] === true){
     //NDL叩く
         let text = await fetch("https://ndlsearch.ndl.go.jp/api/opensearch?isbn=" + isbn)
+        if (text.status !== 200) {
+            error_toast("リクエストエラー" + text.statusText)
+            console.log(text)
+        }
         text = await text.text()
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, "text/xml");
         let doc = xml.getElementsByTagName("item")[0]
+        console.log(doc)
         if (doc) {
             json["title"] = doc.getElementsByTagName("title")[0].innerHTML;
             console.log(json["title"])
@@ -641,9 +652,11 @@ async function isbn_add_yaml(isbn,tags=null) {/* 引数のISBNをyamlに登録 *
             json["pubdate"] = doc.getElementsByTagName("dcterms:issued")[0]?.innerHTML;
             json["page"] = doc.getElementsByTagName("dc:extent")[0]?.innerHTML.replace("p", "");
             json["price"] = doc.getElementsByTagName("dcndl:price")[0]?.innerHTML.replace("円", "");
-
-            const subjects = xml.getElementsByTagNameNS("http://purl.org/dc/elements/1.1/", "subject");
-            for (let s of subjects) { if (s.getAttribute("xsi:type") === "dcndl:NDC10") { json["ndc"] = s.textContent } }
+            
+            console.log(String(doc.innerHTML))
+            console.log(String(doc.innerHTML).match(/<dc:subject/g));
+            console.log(String(doc.innerHTML).match(/<dc:subject.*xsi:type="dcndl:NDC[0-9]+".*>[^<]*<\/dc:subject>/g)?.[0])
+            json["ndc"] = String(doc.innerHTML).match(/<dc:subject.*xsi:type="dcndl:NDC[0-9]+".*>[^<]*<\/dc:subject>/g)?.[0]?.match(">.*<")?.[0]?.match("[0-9]{3}.?[0-9]?")?.[0];
 
             json["descript"] += doc.getElementsByTagName(`link`)[0]?.innerHTML + "(国立国会図書館リンク)\n";
             console.log(json);
@@ -686,14 +699,14 @@ async function isbn_add_yaml(isbn,tags=null) {/* 引数のISBNをyamlに登録 *
             console.log("img save ok");
             console.log(arg)
             json["cover"] = arg["dataText"];
-            await window.api.send("yaml_add", json); // Send
+            await window.api.send("yaml_add", JSON.stringify(json)); // Send
             info_toast(`本を追加しました。(${json["title"]})`)
             json = null;
             load();
             return;
         });
     } else {
-        await window.api.send("yaml_add", json); // Send
+        await window.api.send("yaml_add", JSON.stringify(json)); // Send
         info_toast(`本を追加しました。(${json["title"]})`)
         json = null;
         load()
@@ -724,7 +737,7 @@ async function camera_isbn() {/* Web Camからisbn取得 */
     console.log(cameras)
 
     try {
-        const constraints = {
+        let constraints = {
             video: {
                 deviceId: { exact: cameras[0]["deviceId"] }
             },
@@ -733,8 +746,10 @@ async function camera_isbn() {/* Web Camからisbn取得 */
         let stream = await navigator.mediaDevices.getUserMedia(constraints)
         video.srcObject = stream;
 
-        $("camera_select").change(async () => {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId:{ exact: $("camera_select").val }}, audio:false})
+        $("#camera_select").change(async () => {
+            console.log("camera change ID:" + $("#camera_select").val())
+            constraints = { video: { deviceId:{ exact: $("#camera_select").val() }}, audio:false}
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
         })
 
@@ -752,13 +767,13 @@ async function camera_isbn() {/* Web Camからisbn取得 */
             if (String(text).indexOf("97") != -1) {
                 console.log(text);
                 $(`#isbn_check`).html(`<p class="p_markup">検出ISBN：${text}</p>`);
-                info_toast("本を追加します。ISBN：" + text);
-                let tags = $("camera_taglist").val
-                isbn_add_yaml(text, tags);
-                $("#back_black").click()
-                return;
+                let tags = $("#camera_taglist").val()
+                console.log(tags);
+                isbn_add_yaml(text, tags=tags);
+                // $("#back_black").click()
+                // return;
             }
-            setTimeout(capture, 700);
+            setTimeout(capture, 1300);
         }
         player.addEventListener('canplay', () => {
             player.width = player.videoWidth; // width, heightを設定しないとcap.read(src)で失敗する。

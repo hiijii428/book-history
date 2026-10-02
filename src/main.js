@@ -7,7 +7,7 @@
 /****************************/
 /*********** debug **********/
 /** 開発者ツールのon/off **/
-let debug = false;
+let debug = true;
 /****************************/
 /****************************/
 const {electron,BrowserWindow,app,ipcMain,Menu, dialog, webContents} = require('electron');
@@ -264,11 +264,12 @@ if (!fs.existsSync(setting_json)  ) {
     });
 
     ipcMain.on("yaml_add", (event, arg) => {
+        json = JSON.parse(arg)
         console.log("Book add request!")
         let yaml_text = fs.readFileSync(db_yaml_path)
         let y = yaml.load(yaml_text)
-        arg["index"] = y[y.length - 1]["index"] + 1  //一番最新よりも一つ大きな数。
-        y.push(arg)
+        json["index"] = y[y.length - 1]["index"] + 1  //一番最新よりも一つ大きな数。
+        y.push(json)
         let overwrite = yaml.dump(y);
         fs.writeFileSync(db_yaml_path, overwrite);
     });
