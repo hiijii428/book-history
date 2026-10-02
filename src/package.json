@@ -5,13 +5,14 @@
     "js-yaml": "^5.4.1"
   },
   "name": "book-history",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
     "dist-win": "electron-builder --win",
-    "dist-mac": "electron-builder --mac"
+    "dist-mac": "electron-builder --mac",
+    "dist-all": "electron-builder && electron-builder --win"
   },
   "author": "",
   "license": "ISC",
