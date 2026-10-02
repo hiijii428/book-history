@@ -5,7 +5,7 @@
 ISBNから、本の情報を取得し、登録。本の一覧（本棚）を作ることができるアプリです。  
 図書館の貸出メモや、読書記録、頭の整理などに使用できます。
 
-<img width="620" height="349" alt="README-VIDEO" src="https://github.com/user-attachments/assets/755076a9-4e25-4004-bc25-b8b52a725141" />
+<img width="620" height="349" alt="README-VIDEO" src="https://raw.githubusercontent.com/hiijii428/book-history/refs/heads/main/README-VIDEO.gif" />
 
 # 使い方
 
