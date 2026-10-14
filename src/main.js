@@ -2,15 +2,17 @@
  * # Electron 本棚アプリ
  * isbnや名称から本を検索し、データーベースに登録できる
  * DB形式: yaml (csvでエクスポートできる)
+ * Electron23から正常起動(windows10以上) ==> node 18.12.1
+ * Electron15？なら起動するが、deep copy機能がない（探す）
 */
 
 /****************************/
 /*********** debug **********/
 /** 開発者ツールのon/off **/
-let debug = true;
+let debug = false;
 /****************************/
 /****************************/
-const {electron,BrowserWindow,app,ipcMain,Menu, dialog, webContents} = require('electron');
+const {electron, BrowserWindow,app,ipcMain,Menu, dialog} = require('electron');
 const yaml = require('js-yaml');
 const path = require('path');
 const fs = require('fs-extra');
@@ -29,7 +31,7 @@ function init_window_display() {
     // let old_file_json = {};
     let old_file_json = JSON.parse(fs.readFileSync(setting_json))
     let initWindow = new BrowserWindow({ width: 400, height: 400, webPreferences: { preload: __dirname + '/preload.js' } });
-    let html_path = 'file://' + __dirname + '/view/init.html';
+    let html_path = 'file://' + __dirname + '/www/init.html';
     initWindow.loadURL(html_path);
     initWindow.setMenu(null);
     if (debug) { initWindow.webContents.openDevTools(); }// developper tool を開く
@@ -133,7 +135,7 @@ function init_setting() {
 function about_window_display() {
     console.log("about_window_display");
     let aboutWindow = new BrowserWindow({ width: 400, height: 400, webPreferences: { preload: __dirname + '/preload.js' } });
-    let html_path = 'file://' + __dirname + '/view/about.html';
+    let html_path = 'file://' + __dirname + '/www/about.html';
     aboutWindow.loadURL(html_path);
     aboutWindow.setMenu(null);
     if (debug) { aboutWindow.webContents.openDevTools(); }// developper tool を開く
@@ -180,7 +182,7 @@ if (!fs.existsSync(setting_json)  ) {
         // mainWindow を作成
         mainWindow = new BrowserWindow({/* width: 400, height: 400,*/ webPreferences: { preload: __dirname + '/preload.js' } });
         mainWindow.hide()
-        let html_path = 'file://' + __dirname + '/view/main.html';
+        let html_path = 'file://' + __dirname + '/www/main.html';
         mainWindow.loadURL(html_path);
         if (debug) { mainWindow.webContents.openDevTools(); }// developper tool を開く
         const template = [{
@@ -200,6 +202,9 @@ if (!fs.existsSync(setting_json)  ) {
             submenu:[{
                 label: "アプリについて",
                 click: (menuItem, browserWindow, event) => { about_window_display(); }
+            }, {
+                label: "開発者ツール",
+                click: (menuItem, browserWindow, event) => { browserWindow.webContents.openDevTools(); }
             }]
         }];
         const menu = Menu.buildFromTemplate(template)
@@ -278,14 +283,15 @@ if (!fs.existsSync(setting_json)  ) {
         console.log("Book overwrite request!");
         let yaml_text = fs.readFileSync(db_yaml_path)
         let y = yaml.load(yaml_text)
-        let index = null;
+        let list_index = null;
         for (let i = 0; i < y.length; i++) {
-            if (y[i]["index"] == arg["index"]) {
-                index = i
+            if (y[i]["index"] === arg["index"]) {
+                list_index = i
+                break;
             }
         }
-        y[index] = arg["data"];
-        console.log(y[index]["title"] + "を編集保存");
+        y[list_index] = arg["data"];
+        console.log(y[list_index]["title"] + "を編集保存");
         let overwrite = yaml.dump(y);
         fs.writeFileSync(db_yaml_path, overwrite);
     });

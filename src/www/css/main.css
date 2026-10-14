@@ -21,8 +21,8 @@
     float: left;
     display: block;
 
-    background-color: #fcfcfc80;
-    backdrop-filter: blur(8px);
+    background-color: #fefefe90;
+    backdrop-filter: blur(3px);
 
     border: 0.5px solid #ccc;
     border-radius: 10px;
@@ -94,8 +94,8 @@ p {
     width: 3em;
     height: 3em;
     border-radius: 10px;
-    border: none;
-    background-color: white;
+    border: 1.5px solid #ccc;
+    background-color: #efefef;
     margin-bottom: .5em;
     &:hover{
         background-color: #ccc;
@@ -126,6 +126,14 @@ p {
     vertical-align: middle;
 }.icon_button.edit_button::before {
     background: url("../img/icon/pen.svg") no-repeat;
+    content: "";
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    background-size: contain;
+    vertical-align: middle;
+}.icon_button.reload_button::before {
+    background: url("../img/icon/reload.svg") no-repeat;
     content: "";
     display: inline-block;
     width: 2em;
@@ -228,6 +236,8 @@ table td{ border: 1px solid #888; padding: 5px 10px; }
     &:hover {
             background-color: #888c;
         }
+}label{
+    width: 100%;
 }
 .camera_video{
     height: fit-content;
@@ -258,6 +268,10 @@ table td{ border: 1px solid #888; padding: 5px 10px; }
     display: block;
     text-align: left;
 }
-.none_img img{
+.none_img .cover_img{
     display: none;
+}
+#star img{
+    margin-top: 5px;
+    width: 1.5em;
 }
