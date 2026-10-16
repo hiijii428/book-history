@@ -21,7 +21,7 @@
   "description": "",
   "build": {
     "appId": "book-history",
-    "icon": "./view/img/icon.ico",
+    "icon": "./www/img/icon.ico",
     "directories": {
       "output": "../../build"
     },
@@ -33,13 +33,13 @@
       "package-lock.json"
     ],
     "mac": {
-      "icon": "./view/img/icon512.png",
+      "icon": "./www/img/icon512.png",
       "target": [
         "dmg"
       ]
     },
     "win": {
-      "icon": "",
+      "icon": "./www/img/icon256.png",
       "target": "nsis"
     },
     "nsis": {
@@ -47,7 +47,7 @@
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
-      "icon": "./view/img/icon.png",
+      "icon": "./www/img/icon256.png",
       "target": "AppImage"
     }
   },

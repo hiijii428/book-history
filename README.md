@@ -1,5 +1,7 @@
 # 本棚アプリ
 
+[GitHub Pagesでのデモ版](https://hiijii428.github.io/book-history-demo/main.html)
+
 ## 概要
 
 ISBNから、本の情報を取得し、登録。本の一覧（本棚）を作ることができるアプリです。  

@@ -202,7 +202,7 @@ function card_set() {
                 <div onclick="comment_show(${book.index})">
                     <img class="cover_img" src='${book.img_path}' onerror="this.src='img/no-cover.png'" width=200/>
                     <h3>${book.title}</h3>
-                    <span onclick="return false;" id="star"></span>
+                    <span onclick="event.stopPropagation();" id="star"></span>
                     <p>${(book.author)}</p>
                     <p>貸出/購入日: ${book.get_day}</p>
                 </div>
